@@ -1,0 +1,109 @@
+body,
+ul,
+li,
+p {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    font-size: 2rem;
+    font-family: Arial;
+}
+
+a {
+    text-decoration: none;
+}
+
+.logo {
+    font-size: xx-large;
+}
+
+.header {
+    background-color: rgb(223, 224, 217);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    padding-left: 10px;
+    position: fixed;
+    width: -webkit-fill-available;
+    top: 0;
+    border: none 1px;
+    z-index: 1;
+}
+
+.header a {
+    color: white;
+}
+
+
+section {
+    padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-content: center;
+}
+
+footer {
+	background-color: #333;
+	color: #fff;
+	padding: 10px;
+	text-align: center;
+	margin-top: 50px;
+    font-size: small;
+}
+
+.div-status {
+	padding: 10px;
+	text-align: center;
+    font-size: small;
+}
+
+.div-regstop {
+    display: flex;
+    flex-direction: column;
+    background-color: lightgray;
+    border: solid 1px;
+    padding: 1cqi;
+    font-size: large;
+    border-radius: 10px;
+}
+
+
+.div-regstop p {
+    
+    background-color: lightgray;
+    font-size: large;
+       
+  
+}
+
+.div-regstop div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 600px;
+    padding-bottom: 5px;
+}
+
+.div-regstop div div {
+    font-size: x-large;
+    background-color: gray;
+    margin-left: 10px;
+    border: solid 1px; 
+    height: 35px; 
+    width: 200px;
+}
+
+.select-dd {
+    height: 34px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.bt-informa {
+    font-size: 30px;
+    height: 50px;
+}
