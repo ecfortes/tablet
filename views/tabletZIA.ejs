@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css" />
+  <title>ZIA</title>
+</head>
+
+<body style="background-image: url('background.webp');">
+  <header class="header">
+    <div style="display: flex; align-items:center;">
+      <img style="height: 36px;" src="logo.webp" alt="">
+    </div>
+    <nav>
+      <ul class="menu"></ul>
+    </nav>
+  </header>
+
+  <section style="padding-top: 100px; color:white;">Anotação de Paradas</section>
+
+  <section>
+    <div style="border: solid 1px; margin-bottom: 10px; background-color: lightgray; border-radius: 10px;">
+      <p class="machine-name"></p>
+      <div style="display:flex" class="div-status">
+        <p>Status Atual:</p>
+        <p id="statusText">Parado</p>
+      </div>
+    </div>
+
+    <% if (filteredApontamentos.length > 0) { %>
+    <% filteredApontamentos.forEach(apontamento => { %>
+    <div style="margin-top:10px" class="div-regstop" data-id="<%= apontamento.id %>">
+      <div style="display:none">
+        <p>ID Apontamento</p>
+        <div><%= apontamento.id %></div>
+      </div>
+      <div>
+        <p>Tempo de Maquina Parada:</p>
+        <div><%= apontamento.machine_event.payload.tParada %> min</div>
+      </div>
+      <div>
+        <p>Hora de Inicio:</p>
+        <div><%= new Date(apontamento.machine_event.payload.InicioParada).toLocaleString() %></div>
+      </div>
+      <div>
+        <p>Hora de Fim:</p>
+        <div><%= new Date(apontamento.machine_event.payload.FimParada).toLocaleString() %></div>
+      </div>
+
+      <select class="select-dd">
+        <option value="0">Informe o motivo de parada:</option>
+      </select>
+
+      <button class="bt-informa">Justificar</button>
+    </div>
+    <% }) %>
+    <% } else { %>
+    <p>Nenhum apontamento encontrado para a máquina selecionada.</p>
+    <% } %>
+  </section>
+
+  <script>
+    const data = <%-JSON.stringify(data) %>;
+
+    document.addEventListener("DOMContentLoaded", function() {
+      console.log(data);
+
+
+      //////////atualiza status////////
+
+  const statusText = document.getElementById("statusText");
+
+  // Função para buscar dados da API e atualizar o status
+  async function fetchAndUpdateStatus() {
+    try {
+      // Chamada para a API
+      const response = await fetch("http://35.196.181.62:1880/maquinas/1");
+      if (!response.ok) {
+        throw new Error("Erro ao buscar dados");
+      }
+      const data = await response.json();
+
+      // Verifica se existe parada_atual e se o primeiro item possui dados válidos
+      if (data.parada_atual && data.parada_atual[1]) {
+        const motivoParada = data.parada_atual[1].statechanged_reason;
+        const tempoParada = data.parada_atual[1].tParadaAtual;
+
+        // Formata o tempo de parada para duas casas decimais
+        const tempoParadaFormatado = tempoParada ? tempoParada.toFixed(2) : "0";
+
+        // Atualiza o status na `div` com o motivo de parada e tempo
+        statusText.textContent = `Motivo: ${motivoParada} | Tempo de Parada: ${tempoParadaFormatado} minutos`;
+      } else {
+        statusText.textContent = "Operando normalmente";
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      statusText.textContent = "Erro ao carregar dados";
+    }
+  }
+
+  // Atualiza o status automaticamente a cada 15 segundos
+  setInterval(fetchAndUpdateStatus, 1000);
+
+  // Carrega o status pela primeira vez
+  fetchAndUpdateStatus();
+
+      //////////atualiza status////////
+
+
+      const dropdowns = document.querySelectorAll(".select-dd");
+      dropdowns.forEach(dropdown => {
+        dropdown.innerHTML = '<option value="0">Informe o motivo de parada:</option>';
+        if (data.stopreasons && data.stopreasons.stopReasons) {
+          data.stopreasons.stopReasons.forEach(reason => {
+            const option = document.createElement("option");
+            option.value = reason;
+            option.textContent = reason[0];
+            dropdown.appendChild(option);
+          });
+        } else {
+          console.error("Não foram encontrados motivos de parada para a máquina especificada.");
+        }
+      });
+
+      const machine_name = document.querySelector(".machine-name");
+      if (data.stopreasons) {
+        machine_name.innerHTML = data.stopreasons.name;
+      } else {
+        console.error("Erro de configuração de máquina - Esta máquina não existe");
+      }
+
+      document.querySelectorAll(".bt-informa").forEach(button => {
+        button.addEventListener("click", function() {
+          const divRegstop = button.closest(".div-regstop");
+          const apontamentoId = divRegstop.getAttribute("data-id");
+          const motivoSelect = divRegstop.querySelector(".select-dd");
+          const motivoParada = motivoSelect.value;
+
+          if (motivoParada === "0") {
+            alert("Por favor, selecione um motivo de parada.");
+            return;
+          }
+
+          // Adiciona a classe para iniciar a animação de redução de altura
+          divRegstop.classList.add("fade-out");
+
+          fetch(`http://35.196.181.62:1880/maquinas/${apontamentoId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                id: apontamentoId,
+                motivo: motivoParada
+              })
+            })
+            .then(response => {
+              if (response.ok) {
+                alert("Justificativa enviada com sucesso!");
+              } else {
+                alert("Erro ao enviar justificativa.");
+                divRegstop.classList.remove("fade-out"); // Reverte a animação em caso de erro
+              }
+            })
+            .catch(error => {
+              console.error("Erro:", error);
+              divRegstop.classList.remove("fade-out"); // Reverte a animação em caso de erro
+            });
+        });
+      });
+    });
+  </script>
+
+
+
+</body>
+
+</html>

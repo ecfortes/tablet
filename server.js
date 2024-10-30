@@ -1,8 +1,10 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const app = express();
-const routes = require('./routes/index');
+const routes = require("./routes/index");
 const PORT = process.env.PORT || 80;
+
+app.set("view engine", "ejs");
 
 // Middleware para analisar requisições codificadas em URL
 app.use(express.urlencoded({ extended: false }));
@@ -11,10 +13,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Servir arquivos estáticos (CSS, imagens, etc.)
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // Rotas principais
-app.use('/', routes);
+app.use("/", routes);
 
 // Iniciar o servidor
 app.listen(PORT, () => {

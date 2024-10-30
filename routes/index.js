@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const tabletController = require('../controllers/tabletController');
+const tabletController = require("../controllers/tabletController");
 
-router.get('/', tabletController.tabletZIA);
+router.get("/:id", tabletController.tabletZIA);
 
 module.exports = router;
