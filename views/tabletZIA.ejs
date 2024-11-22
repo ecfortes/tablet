@@ -112,7 +112,7 @@
         const paradaAtual = document.getElementById("paradaAtual");
         try {
           // Faz a requisição para obter os dados de status da máquina
-          const response = await fetch(`http://35.196.181.62:1880/maquinas/${machineId}`);
+          const response = await fetch(`http://192.168.1.16:1880/maquinas/${machineId}`);
           if (!response.ok) throw new Error("Erro ao buscar dados");
 
           const data = await response.json(); // Converte a resposta para JSON
@@ -238,7 +238,7 @@
           divRegstop.classList.add("fade-out");
 
           // Envia a justificativa de parada usando POST para o backend
-          fetch(`http://35.196.181.62:1880/maquinas/${apontamentoId}`, {
+          fetch(`http://192.168.1.16:1880/maquinas/${apontamentoId}`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json"
