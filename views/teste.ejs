@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+    <head>
+        <!-- Define a codificação e a escala da página para dispositivos móveis -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Link para o arquivo CSS externo, que contém os estilos da página -->
+        <link rel="stylesheet" href="style.css" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>ZIA</title>
+    </head>
+
+    <body style="background-image: url('background.webp');">
+        <!-- Cabeçalho da página com a logo e um menu -->
+        <header class="header">
+            <div style="display: flex; align-items:center;">
+                <!-- Logo da página exibida com altura ajustada -->
+                <img style="height: 70px;" src="logo.webp" alt>
+            </div>
+            <nav>
+                <ul class="menu"></ul>
+                <!-- Menu vazio; conteúdo será adicionado pelo CSS ou JavaScript -->
+            </nav>
+        </header>
+
+        <section>
+            <!-- Exibe o status atual da máquina em um bloco com borda arredondada -->
+            <div
+                style="border: solid 1px; margin-bottom: 10px; background-color: lightgray; border-radius: 10px; width:700px">
+                <p class="machine-name"><b></b></p>
+                <!-- Nome da máquina será preenchido dinamicamente -->
+                <div
+                    style="display:flex; flex-direction: column; align-items: flex-start;"
+                    class="div-status">
+                    <div style="display: flex; flex-direction: row">
+                        <p>Status Atual:</p>
+                        <p id="statusText"></p>
+                        <!-- Texto do status será atualizado pelo JavaScript -->
+                    </div>
+                    <div id="paradaAtual"
+                        style="margin-top: 16px;padding: 5px;display:flex;flex-direction: column;align-items: flex-start;border: solid 1px;border-radius: 10px; width:667px; margin-bottom:10px">
+                        <select id="seletor1" class="select-dd"
+                            style="display: none;">
+                            <option value="0">Informe o motivo de
+                                parada:</option>
+                        </select>
+                        <p id="p1">Motivo: </p>
+                        <p id="p2">Hora Inicio: </p>
+                        <p id="p3">Tempo Transcorr.: </p>
+                    </div>
+                    <p id="p4">Producao Turno: </p>
+
+                </div>
+            </div>
+            <div
+                style="width: 700px; display: flex; justify-content: space-between;">
+                <button type="button" id="alterarMotivo">Alterar Motivo</button>
+                <button type="button" id="confirmar"
+                    style="display: none;">Confirmar</button>
+            </div>
+
+        </section>
+    </body>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const alterarMotivoBtn = document.getElementById("alterarMotivo");
+        const confirmarBtn = document.getElementById("confirmar");
+        const selector = document.getElementById("seletor1")
+
+    // Adicionar evento para o botão "Alterar Motivo"
+    alterarMotivoBtn.addEventListener("click", () => {
+        // Esconder o botão "Alterar Motivo"
+        //alterarMotivoBtn.style.display = "none";
+        // Mostrar o botão "Confirmar"
+        confirmarBtn.style.display = "inline-block";
+        selector.style.display = "flex"
+    });
+
+    // Adicionar evento para o botão "Confirmar"
+    confirmarBtn.addEventListener("click", () => {
+        alert("Ação confirmada!");
+        // Resetar os botões ao estado inicial
+        confirmarBtn.style.display = "none";
+        alterarMotivoBtn.style.display = "inline-block";
+        selector.style.display = "none"
+
+    });
+
+
+
+
+
+    })
+
+
+
+
+
+  </script>
+</html>

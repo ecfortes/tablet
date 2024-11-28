@@ -36,59 +36,26 @@
           <p>Status Atual:</p>
           <p id="statusText"></p> <!-- Texto do status será atualizado pelo JavaScript -->
         </div>
-
-        <div id="paradaAtual" style="margin-top: 16px;padding: 5px;display:none;flex-direction: column;align-items: flex-start;border: solid 1px;border-radius: 10px; width:667px">
-          <p>Motivo: </p>
-          <p>Hora Inicio: </p>
-          <p>Tempo Transcorr.: </p>
+        <div id="paradaAtual" style="margin-top: 16px;padding: 5px;display:none;flex-direction: column;align-items: flex-start;border: solid 1px;border-radius: 10px; width:667px; margin-bottom:10px">
+          <select class="select-dd">
+            <option value="0">Informe o motivo de parada:</option>
+          </select>
+          <p id="p1">Motivo: </p>
+          <p id="p2">Hora Inicio: </p>
+          <p id="p3">Tempo Transcorr.: </p>
         </div>
+        <p id="p4">Producao Turno: </p>
+        
       </div>
     </div>
 
-    <!-- Condicional para verificar se há apontamentos a serem exibidos -->
-    <% if (filteredApontamentos.length > 0) { %>
-    <% filteredApontamentos.forEach(apontamento => { %>
-    <div style="margin-top:10px" class="div-regstop" data-id="<%= apontamento.id %>">
-      <!-- Exibe o ID do apontamento (oculto para o usuário) -->
-      <div style="display:none">
-        <p>ID Apontamento</p>
-        <div><%= apontamento.id %></div>
-      </div>
-      <!-- Exibe o tempo total que a máquina ficou parada neste apontamento -->
-      <div>
-        <p>Tempo de Maquina Parada:</p>
-        <div><%= apontamento.machine_event.payload.tParada %> min</div>
-      </div>
-      <!-- Hora em que a máquina começou a parada -->
-      <div>
-        <p>Hora de Inicio:</p>
-        <div><%= new Date(apontamento.machine_event.payload.InicioParada).toLocaleString() %></div>
-      </div>
-      <!-- Hora em que a parada terminou -->
-      <div>
-        <p>Hora de Fim:</p>
-        <div><%= new Date(apontamento.machine_event.payload.FimParada).toLocaleString() %></div>
-      </div>
-      <!-- Dropdown para o usuário selecionar o motivo da parada -->
-      <select class="select-dd">
-        <option value="0">Informe o motivo de parada:</option>
-      </select>
-      <!-- Botão para enviar a justificativa da parada -->
-      <button class="bt-informa">Justificar</button>
-    </div>
-    <% }) %>
-    <% } else { %>
-    <!-- Caso não existam apontamentos, exibe uma mensagem padrão -->
-    <p>Nenhum apontamento pendente.</p>
-    <% } %>
   </section>
 
   <!-- Script JavaScript para interatividade da página -->
   <script>
-    // Converte os dados do backend para um objeto JavaScript
-    const data = <%-JSON.stringify(data) %>;
-
     document.addEventListener("DOMContentLoaded", function() {
+      // Converte os dados do backend para um objeto JavaScript
+      const data = <%-JSON.stringify(data) %>;
       console.log(data); // Log dos dados para debug
 
 
@@ -101,7 +68,6 @@
         //console.log(path, " ", segments)
         return segments[1]; // Obtém o ID da máquina baseado na estrutura da URL
       }
-
       // Armazena o ID da máquina em uma variável para uso posterior
       const machineId = getMachineIdFromURL();
       console.log(machineId);
@@ -110,9 +76,13 @@
       async function fetchAndUpdateStatus() {
         const statusText = document.getElementById("statusText");
         const paradaAtual = document.getElementById("paradaAtual");
+        const p1 = document.getElementById("p1")
+        const p2 = document.getElementById("p2")
+        const p3 = document.getElementById("p3")
+        const p4 = document.getElementById("p4")
         try {
           // Faz a requisição para obter os dados de status da máquina
-          const response = await fetch(`http://192.168.1.16:1880/maquinas/${machineId}`);
+          const response = await fetch(`http://192.168.200.200:1880/maquinas/${machineId}`);
           if (!response.ok) throw new Error("Erro ao buscar dados");
 
           const data = await response.json(); // Converte a resposta para JSON
@@ -128,10 +98,12 @@
           // Obtenha mode/state
           let mode = data.status[machineId][0];
           let state = data.status[machineId][1];
+          let produzidos = data.status[machineId][2]
           let strStatus;
-
+          p4.innerHTML = `Producao Turno: ${data.status[machineId][2]} frascos`
           console.log("Mode:", mode);
           console.log("State:", state);
+          console.log("Produzidos:", produzidos);
 
           if (mode == 2) {
             const statusMap = {
@@ -141,17 +113,17 @@
               4: 'Parada', // 'Idle',
               5: 'Parada Externa', //'Suspend',
               6: 'Produzindo', //'Execute',
-              7: 'Produzindo',//'Stopping',
-              8: 'Falha',//'Aborting',
-              9: 'Falha',//'Aborted',
-              10: 'Parada',//'Holding',
-              11: 'Parada Interna',//'Held',
-              12: 'Parada',//'Unholding',
-              13: 'Parada',//'Suspending',
-              14: 'Parada',//'Unsuspending',
-              15: 'Parada',//'Reseting',
-              16: 'Parada',//'Completing',
-              17: 'Parada'//'Complete'
+              7: 'Produzindo', //'Stopping',
+              8: 'Falha', //'Aborting',
+              9: 'Falha', //'Aborted',
+              10: 'Parada', //'Holding',
+              11: 'Parada Interna', //'Held',
+              12: 'Parada', //'Unholding',
+              13: 'Parada', //'Suspending',
+              14: 'Parada', //'Unsuspending',
+              15: 'Parada', //'Reseting',
+              16: 'Parada', //'Completing',
+              17: 'Parada' //'Complete'
             };
 
             // Defina o status com fallback para "Stopped" se o estado não existir no mapa
@@ -173,13 +145,14 @@
             console.log("Hora inicio de Parada:", horaFormatada);
             console.log("Tempo de Parada:", tempoParadaFormatado);
 
-            // Atualize os elementos com os dados de parada
-            paradaAtual.innerHTML = `
-                    <p>Motivo: ${motivoParada}</p>
-                    <p>Hora Início: ${horaFormatada}</p>
-                    <p>Tempo Transcorr.: ${tempoParadaFormatado} min</p>`;
+            p1.innerHTML = `Motivo: ${motivoParada}`
+            p2.innerHTML = `Hora Início: ${horaFormatada}`
+            p3.innerHTML = `Tempo Transcorr.: ${tempoParadaFormatado} min`
 
-           paradaAtual.style.display = "flex"; // Oculta a div quando não há dados de parada
+
+
+
+            paradaAtual.style.display = "flex"; // Oculta a div quando não há dados de parada
           } else {
             paradaAtual.style.display = "none"; // Oculta a div quando não há dados de parada
           }
@@ -191,11 +164,12 @@
 
       // Chamada inicial da função e configuração para atualização a cada 15 segundos
       fetchAndUpdateStatus();
-      setInterval(fetchAndUpdateStatus, 1000);
+      setInterval(fetchAndUpdateStatus, 60000);
 
 
       ////// Populando dropdown de motivos de parada //////
       const dropdowns = document.querySelectorAll(".select-dd");
+      console.log(dropdowns)
       dropdowns.forEach(dropdown => {
         dropdown.innerHTML = '<option value="0">Informe o motivo de parada:</option>';
 

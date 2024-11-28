@@ -2,7 +2,7 @@ const axios = require("axios");
 
 exports.tabletZIA = async (req, res) => {
   const id_machine = req.params.id;
-  const apiUrl = `http://192.168.1.16:1880/maquinas/${id_machine}`;
+  const apiUrl = `http://192.168.200.200:1880/maquinas/${id_machine}`;
 
   try {
     // Fazer a requisição à API
@@ -14,7 +14,7 @@ exports.tabletZIA = async (req, res) => {
     //console.log("response.data")
     const data = response.data;
 
-    //onsole.log(data)
+    console.log(JSON.stringify(data,null,2))
 
     // Verifica se 'data.apontamentos' é um array de pares antes de filtrar
     const filteredApontamentos = Array.isArray(data.apontamentos)
@@ -27,10 +27,38 @@ exports.tabletZIA = async (req, res) => {
       //console.log(filteredApontamentos)
 
     // Renderiza a página com `data` disponível
+
     res.render("tabletZIA", { id_machine, data, filteredApontamentos });
   } catch (error) {
     console.error("Erro ao buscar dados:", error.message);
     res.status(500).send("Erro ao buscar dados da API");
+    
+  }
+};
+
+
+exports.tabletZIAteste = async (req, res) => {
+  
+
+  try {
+   
+
+    res.render("teste");
+  } catch (error) {
+    res.status(500).send("Erro");
+    
+  }
+};
+
+exports.inicial = async (req, res) => {
+  
+
+  try {
+   
+
+    res.render("inicial");
+  } catch (error) {
+    res.status(500).send("Erro");
     
   }
 };

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+    <head>
+        <!-- Define a codificação e a escala da página para dispositivos móveis -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Link para o arquivo CSS externo, que contém os estilos da página -->
+        <link rel="stylesheet" href="style.css" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>ZIA</title>
+    </head>
+
+    <style>
+
+        /* Estilização da div principal */
+        .button-container {
+            width: 700px;
+            margin: 0 auto; /* Centraliza horizontalmente a div */
+            display: flex;
+            justify-content: space-between; /* Espaço uniforme entre os botões */
+            align-items: center; /* Alinha os botões verticalmente */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        /* Estilização dos botões */
+        .button-container button {
+            width: 150px;
+            height: 40px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Efeito hover */
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+
+    <body style="background-image: url('background.webp');">
+        <!-- Cabeçalho da página com a logo e um menu -->
+        <header class="header">
+            <div style="display: flex; align-items:center;">
+                <!-- Logo da página exibida com altura ajustada -->
+                <img style="height: 70px;" src="logo.webp" alt>
+            </div>
+            <nav>
+                <ul class="menu"></ul>
+                <!-- Menu vazio; conteúdo será adicionado pelo CSS ou JavaScript -->
+            </nav>
+        </header>
+
+        <div class="button-container">
+            <button onclick="location.href='/1'">Link 1</button>
+            <button onclick="location.href='/2'">Link 2</button>
+            <button onclick="location.href='/3'">Link 3</button>
+            <button onclick="location.href='/4'">Link 4</button>
+        </div>
+
+    </body>
+
+    
+</html>
