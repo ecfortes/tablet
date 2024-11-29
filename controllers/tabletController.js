@@ -14,17 +14,20 @@ exports.tabletZIA = async (req, res) => {
     //console.log("response.data")
     const data = response.data;
 
-    console.log(JSON.stringify(data,null,2))
+    console.log(JSON.stringify(data, null, 2));
 
     // Verifica se 'data.apontamentos' é um array de pares antes de filtrar
     const filteredApontamentos = Array.isArray(data.apontamentos)
       ? data.apontamentos
-          .filter(([, evento]) => evento.machine_event.payload.machine_id == id_machine)
+          .filter(
+            ([, evento]) =>
+              evento.machine_event.payload.machine_id == id_machine
+          )
           .map(([apontamentoId, evento]) => ({ id: apontamentoId, ...evento })) // opcional: adiciona o ID do apontamento no objeto final
       : [];
 
-          //console.log("response.data")
-      //console.log(filteredApontamentos)
+    //console.log("response.data")
+    //console.log(filteredApontamentos)
 
     // Renderiza a página com `data` disponível
 
@@ -32,33 +35,21 @@ exports.tabletZIA = async (req, res) => {
   } catch (error) {
     console.error("Erro ao buscar dados:", error.message);
     res.status(500).send("Erro ao buscar dados da API");
-    
   }
 };
 
-
 exports.tabletZIAteste = async (req, res) => {
-  
-
   try {
-   
-
     res.render("teste");
   } catch (error) {
     res.status(500).send("Erro");
-    
   }
 };
 
 exports.inicial = async (req, res) => {
-  
-
   try {
-   
-
     res.render("inicial");
   } catch (error) {
     res.status(500).send("Erro");
-    
   }
 };

@@ -71,8 +71,7 @@ footer {
   border-radius: 10px;
   max-height: 300px; /* Ajuste esse valor para a altura máxima da div */
   opacity: 1;
-  transition: opacity 0.5s ease, padding 0.5s ease,
-    margin 0.5s ease;
+  transition: opacity 0.5s ease, padding 0.5s ease, margin 0.5s ease;
   overflow: hidden;
 }
 
@@ -114,7 +113,6 @@ footer {
   font-size: 20px;
   margin-bottom: 10px;
   width: 100%;
-
 }
 
 .bt-informa {
@@ -124,7 +122,6 @@ footer {
 
 .machine-name {
   font-size: larger;
-
 }
 
 button {
